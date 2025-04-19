@@ -1,0 +1,15 @@
+- name: Create Persistent Volume Claim
+  community.okd.k8s:
+    definition:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: app-storage
+        namespace: microservice-demo
+      spec:
+        storageClassName: lvms-vg1
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 5Gi
