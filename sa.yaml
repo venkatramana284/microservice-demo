@@ -1,0 +1,8 @@
+- name: Create Service Account
+  community.okd.k8s:
+    definition:
+      apiVersion: v1
+      kind: ServiceAccount
+      metadata:
+        name: microservice-sa
+        namespace: microservice-demo
