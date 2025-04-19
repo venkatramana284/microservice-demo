@@ -1,0 +1,30 @@
+- name: Expose Service
+  community.okd.k8s:
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: sample-service
+        namespace: microservice-demo
+      spec:
+        selector:
+          app: sample-microservice
+        ports:
+          - protocol: TCP
+            port: 80
+            targetPort: 8080
+
+- name: Create Route
+  community.okd.k8s:
+    definition:
+      apiVersion: route.openshift.io/v1
+      kind: Route
+      metadata:
+        name: sample-route
+        namespace: microservice-demo
+      spec:
+        to:
+          kind: Service
+          name: sample-service
+        port:
+          targetPort: 8080
