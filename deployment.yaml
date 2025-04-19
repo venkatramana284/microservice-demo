@@ -1,0 +1,41 @@
+- name: Deploy Microservice
+  community.okd.k8s:
+    definition:
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: sample-microservice
+        namespace: microservice-demo
+      spec:
+        replicas: 3
+        strategy:
+          type: RollingUpdate
+          rollingUpdate:
+            maxSurge: 25%
+            maxUnavailable: 25%
+        selector:
+          matchLabels:
+            app: sample-microservice
+        template:
+          metadata:
+            labels:
+              app: sample-microservice
+          spec:
+            serviceAccountName: microservice-sa
+            containers:
+            - name: main-container
+              image: quay.io/yourrepo/sample-microservice:latest
+              ports:
+                - containerPort: 8080
+              volumeMounts:
+                - name: config-volume
+                  mountPath: /etc/config
+                - name: storage-volume
+                  mountPath: /data
+            volumes:
+              - name: config-volume
+                configMap:
+                  name: app-config
+              - name: storage-volume
+                persistentVolumeClaim:
+                  claimName: app-storage
